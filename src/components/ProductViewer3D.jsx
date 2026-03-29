@@ -1,49 +1,58 @@
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Environment } from "@react-three/drei";
+import { OrbitControls, Environment, useGLTF, useAnimations } from "@react-three/drei";
+import { Suspense, useEffect, useRef } from "react";
+import * as THREE from "three";
 
-function DemoMesh() {
+function Model({ sex, display, color }) {
+  const group = useRef();
+
+  let modelFile = "/homme_fixe.glb";
+
+  if (sex === "homme" && display === "fixe") modelFile = "/homme_fixe.glb";
+  if (sex === "homme" && display === "mouvement") modelFile = "/homme_mouvement2.glb";
+  if (sex === "homme" && display === "seul") modelFile = "/homme_seul.glb";
+
+  if (sex === "femme" && display === "fixe") modelFile = "/femme_fixe.glb";
+  if (sex === "femme" && display === "mouvement") modelFile = "/femme_mouvement.glb";
+  if (sex === "femme" && display === "seul") modelFile = "/femme_seul.glb";
+
+  const { scene, animations } = useGLTF(modelFile);
+  const { actions } = useAnimations(animations, group);
+
+  useEffect(() => {
+    const tshirtMesh = scene.getObjectByName("tshirt");
+
+    if (tshirtMesh && tshirtMesh.isMesh) {
+      tshirtMesh.material = tshirtMesh.material.clone();
+      tshirtMesh.material.color = new THREE.Color(color);
+    }
+  }, [color, scene]);
+
+  useEffect(() => {
+    if (display === "mouvement") {
+      Object.values(actions).forEach((action) => action.play());
+    }
+  }, [actions, display]);
+
   return (
-    <group>
-      {/* Body */}
-      <mesh position={[0, 0, 0]}>
-        <boxGeometry args={[1.1, 1.4, 0.35]} />
-        <meshStandardMaterial />
-      </mesh>
-
-      {/* Sleeves */}
-      <mesh position={[-0.85, 0.05, 0]}>
-        <boxGeometry args={[0.55, 0.5, 0.35]} />
-        <meshStandardMaterial />
-      </mesh>
-      <mesh position={[0.85, 0.05, 0]}>
-        <boxGeometry args={[0.55, 0.5, 0.35]} />
-        <meshStandardMaterial />
-      </mesh>
-
-      {/* Hood */}
-      <mesh position={[0, 0.8, -0.05]}>
-        <sphereGeometry args={[0.45, 32, 32]} />
-        <meshStandardMaterial />
-      </mesh>
-    </group>
+    <primitive ref={group} object={scene} scale={1.5} position={[0, -4, 0]} />
   );
 }
 
-export default function ProductViewer3D() {
+export default function ProductViewer3D({ sex, display, color }) {
   return (
-    <div className="rounded-2xl border border-neutral-800 overflow-hidden bg-neutral-950">
-      <div className="px-4 py-3 border-b border-neutral-800 text-sm text-neutral-300">
-        Vue 3D (démo)
-      </div>
-      <div className="h-[420px]">
-        <Canvas camera={{ position: [0, 1.2, 2.6], fov: 45 }}>
-          <ambientLight intensity={0.6} />
-          <directionalLight position={[2, 3, 2]} intensity={1.2} />
-          <Environment preset="city" />
-          <DemoMesh />
-          <OrbitControls enablePan={false} />
-        </Canvas>
-      </div>
+    <div className="rounded-2xl border border-neutral-800 bg-neutral-950 p-4 h-[500px]">
+      <Canvas camera={{ position: [2.5, 2.2, 4] }}>
+        <ambientLight intensity={0.6} />
+        <directionalLight position={[2, 3, 2]} intensity={5} />
+        <Environment preset="city" />
+
+        <Suspense fallback={null}>
+          <Model sex={sex} display={display} color={color} />
+        </Suspense>
+
+        <OrbitControls enablePan={false} />
+      </Canvas>
     </div>
   );
 }
