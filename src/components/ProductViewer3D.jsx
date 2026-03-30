@@ -5,16 +5,17 @@ import * as THREE from "three";
 
 function Model({ sex, display, color }) {
   const group = useRef();
+  const base = import.meta.env.BASE_URL;
 
-  let modelFile = "/homme_fixe.glb";
+  let modelFile = `${base}homme_fixe.glb`;
 
-  if (sex === "homme" && display === "fixe") modelFile = "/homme_fixe.glb";
-  if (sex === "homme" && display === "mouvement") modelFile = "/homme_mouvement2.glb";
-  if (sex === "homme" && display === "seul") modelFile = "/homme_seul.glb";
+  if (sex === "homme" && display === "fixe") modelFile = `${base}homme_fixe.glb`;
+  if (sex === "homme" && display === "mouvement") modelFile = `${base}homme_mouvement2.glb`;
+  if (sex === "homme" && display === "seul") modelFile = `${base}homme_seul.glb`;
 
-  if (sex === "femme" && display === "fixe") modelFile = "/femme_fixe.glb";
-  if (sex === "femme" && display === "mouvement") modelFile = "/femme_mouvement.glb";
-  if (sex === "femme" && display === "seul") modelFile = "/femme_seul.glb";
+  if (sex === "femme" && display === "fixe") modelFile = `${base}femme_fixe.glb`;
+  if (sex === "femme" && display === "mouvement") modelFile = `${base}femme_mouvement.glb`;
+  if (sex === "femme" && display === "seul") modelFile = `${base}femme_seul.glb`;
 
   const { scene, animations } = useGLTF(modelFile);
   const { actions } = useAnimations(animations, group);
