@@ -18,4 +18,6 @@ export const router = createBrowserRouter([
       { path: "success", element: <Success /> },
     ],
   },
-]);
+], {
+  basename: import.meta.env.BASE_URL,
+});

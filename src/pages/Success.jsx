@@ -221,7 +221,7 @@ function DeliveryTruckAnimation() {
           }}
         >
           <img
-            src="/camion.png"
+            src={`${import.meta.env.BASE_URL}camion.png`}
             alt="Camion de livraison"
             className="h-16 w-28 object-contain drop-shadow-[0_10px_16px_rgba(0,0,0,0.55)] select-none pointer-events-none"
             draggable="false"

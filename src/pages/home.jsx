@@ -77,7 +77,7 @@ export default function Home() {
       >
         <div className="aspect-[4/5] rounded-[2rem] border border-neutral-800 overflow-hidden bg-neutral-900">
           <img
-            src="/images/hero.webp"
+            src={`${import.meta.env.BASE_URL}images/hero.webp`}
             alt="Nouvelle collection"
             className="w-full h-full object-cover opacity-95"
           />
